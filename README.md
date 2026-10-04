@@ -12,7 +12,7 @@ Enterprise-grade Model Context Protocol (MCP) server for Procore construction ma
 
 > [!IMPORTANT]
 > **The Zero Unauthorized Commitment Guarantee**:
-> Our server provides the industry's only mathematically verified safety invariant: an AI agent using `procore-mcp` is provably incapable of executing a binding subcontract or issuing an RFI without explicit human web confirmation.
+> Built with a mathematically verified safety invariant: an AI agent using `procore-mcp` is provably incapable of executing a binding subcontract or issuing an RFI without explicit human confirmation in the native Procore web application.
 
 ---
 
@@ -23,7 +23,7 @@ Enterprise-grade Model Context Protocol (MCP) server for Procore construction ma
 - **[System Architecture Specification](docs/ARCHITECTURE.md)**: Deep technical architecture, formal finite state machine (FSM) proofs, 3-tier dynamic context distillation, multi-vault resolution, and synthetic sandbox engine.
 - **[Cloud-Native & Enterprise Deployment Guide](docs/DEPLOYMENT.md)**: Production multi-stage Dockerfile, remote SSE protocol, enterprise Kubernetes manifests, and Helm 3 chart deployment.
 - **[Formal Research Whitepaper](docs/whitepaper.md)**: Mathematical state machine proof of Zero Terminal Reachability ($\text{ReachableStates}(MCP) \cap \text{Terminal} = \emptyset$), adversarial homoglyph invariance, and cryptographic HMAC-SHA256 audit log chaining.
-- **[Enterprise Commercial Licensing & Services](docs/COMMERCIAL.md)**: Production commercial licenses ($4,950 / year), Turnkey Async Deployment Sprints ($12,500 – $25,000), support retainers ($1,500 / month), multi-tenant DMSA credentials, and commercial legal indemnity.
+- **[Enterprise Commercial Licensing & Services](docs/COMMERCIAL.md)**: Production commercial licenses, Turnkey Async Deployment Sprints, enterprise support retainers, multi-tenant DMSA credentials, and commercial legal indemnity.
 - **[Security Policy & Vulnerability Reporting](docs/SECURITY.md)**: Zero-leak credential policy, structural prompt injection immunity proof, secret masking, and responsible disclosure coordination (`security@liamdgray.com`).
 
 ---
@@ -268,7 +268,7 @@ This project adheres to strict Test-Driven Development (TDD) and static analysis
 ./run_checks.sh
 ```
 
-All 370 tests run deterministically without external network access or real Procore API credentials.
+All 448 tests run deterministically without external network access or real Procore API credentials.
 
 ---
 
