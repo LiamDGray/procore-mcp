@@ -221,9 +221,7 @@ def test_prompt_budget_risk_audit() -> None:
     """procore_budget_risk_audit returns guided workflow prompt for auditing budget."""
     server = create_server(demo_mode=True)
 
-    raw_prompt = asyncio.run(
-        server.get_prompt("procore_budget_risk_audit", {"project_id": 101})
-    )
+    raw_prompt = asyncio.run(server.get_prompt("procore_budget_risk_audit", {"project_id": 101}))
     prompt_text = _get_prompt_text(raw_prompt)
 
     assert "101" in prompt_text

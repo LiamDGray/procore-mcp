@@ -657,6 +657,40 @@ def create_parser() -> MCPArgumentParser:
         help="Explicit destination configuration file path override",
     )
 
+    # Subcommand: verify
+    verify_cli_parser = subparsers.add_parser(
+        "verify",
+        help="Automated formal SMT verification and cryptographic audit verification",
+    )
+    verify_cli_parser.add_argument(
+        "--quick",
+        action="store_true",
+        default=False,
+        help="Bounded SMT verification depth for fast checks",
+    )
+    verify_cli_parser.add_argument(
+        "--audit-log",
+        default=None,
+        help="Explicit path to audit log (.jsonl) to verify",
+    )
+    verify_cli_parser.add_argument(
+        "--audit-key",
+        default=None,
+        help="Secret key for HMAC-SHA256 signature verification",
+    )
+    verify_cli_parser.add_argument(
+        "--output",
+        choices=["terminal", "json", "markdown"],
+        default="terminal",
+        help="Output format: terminal, json, or markdown (default: terminal)",
+    )
+    verify_cli_parser.add_argument(
+        "--strict",
+        action="store_true",
+        default=False,
+        help="Fail with exit code 1 if any verification stage fails or audit log is corrupted",
+    )
+
     parser.add_argument(
         "--transport",
         choices=["stdio", "sse"],
@@ -812,6 +846,12 @@ def main(argv: list[str] | None = None) -> None:
             )
             sys.stdout.write(render_config_string(args.client, cfg))
         return
+
+    if args.subcommand == "verify":
+        from procore_mcp.verifier_cli import run_verification_cli
+
+        code = run_verification_cli(args)
+        sys.exit(code)
 
     env_demo = os.getenv("PROCORE_DEMO_MODE", "").strip().lower() in ("1", "true", "yes")
     demo_mode = bool(args.demo or env_demo)

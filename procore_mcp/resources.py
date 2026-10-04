@@ -148,9 +148,7 @@ def register_resources(
             rfi_counts["total"] = len(rfis)
             for rfi in rfis:
                 status_raw = str(rfi.get("status") or "").lower()
-                rfi_counts["by_status"][status_raw] = (
-                    rfi_counts["by_status"].get(status_raw, 0) + 1
-                )
+                rfi_counts["by_status"][status_raw] = rfi_counts["by_status"].get(status_raw, 0) + 1
                 if "open" in status_raw:
                     rfi_counts["open"] += 1
                 elif "closed" in status_raw:
@@ -184,9 +182,7 @@ def register_resources(
         total_raw_tokens = sum(m.raw_tokens for m in metrics)
         total_dist_tokens = sum(m.distilled_tokens for m in metrics)
         agg_reduction = (
-            (1.0 - (total_dist_tokens / total_raw_tokens)) * 100.0
-            if total_raw_tokens > 0
-            else 0.0
+            (1.0 - (total_dist_tokens / total_raw_tokens)) * 100.0 if total_raw_tokens > 0 else 0.0
         )
         payload = {
             "metrics": [

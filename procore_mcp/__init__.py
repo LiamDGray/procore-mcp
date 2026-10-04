@@ -112,6 +112,11 @@ from procore_mcp.vault import (
     resolve_hashicorp_vault,
     resolve_secret,
 )
+from procore_mcp.verifier_cli import (
+    VerificationReport,
+    run_verification,
+    run_verification_cli,
+)
 
 __version__ = "0.1.0"
 
@@ -147,6 +152,7 @@ __all__ = [
     "SUPPORTED_CLIENTS",
     "VALID_DETAIL_LEVELS",
     "VaultResolutionError",
+    "VerificationReport",
     "Z3FSMModel",
     "__version__",
     "assert_write_permitted",
@@ -206,6 +212,8 @@ __all__ = [
     "run_audit_verify",
     "run_demo_scenario",
     "run_three_tier_benchmarks",
+    "run_verification",
+    "run_verification_cli",
     "set_default_client",
     "validate_detail_level",
     "validate_transition",
