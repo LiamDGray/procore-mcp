@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: procore-mcp-service
+  labels:
+    app: procore-mcp
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8000
+      targetPort: 8000
+      protocol: TCP
+      name: sse
+  selector:
+    app: procore-mcp

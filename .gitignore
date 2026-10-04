@@ -1,0 +1,38 @@
+# Python artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+
+# Testing & quality caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.hypothesis/
+.coverage
+coverage.xml
+htmlcov/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Environment credentials & local logs
+.env
+*.db
+*.log
+*.jsonl
+!docs/demo/*.jsonl
+
+# Operating system artifacts
+.DS_Store
+Thumbs.db
+
+# Development notes & temporary sprint blueprints
+*_PLAN.md
+*_BLUEPRINT.md
+*_SPEC.md
+*_STRATEGY.md

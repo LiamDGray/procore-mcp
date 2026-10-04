@@ -1,0 +1,40 @@
+# Git and CI/CD
+.git/
+.gitignore
+.github/
+
+# Test suites and test caches
+tests/
+.pytest_cache/
+.hypothesis/
+.coverage
+htmlcov/
+
+# Python compiler artifacts and caches
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Static analysis and linter caches
+.mypy_cache/
+.ruff_cache/
+
+# Local secrets, keys, and environment files
+.env
+.env.*
+*.key
+*.pem
+*.crt
+*secret*
+
+# Audit log dumps and runtime logs
+*.log
+procore_audit*.jsonl
+data/
+
+# Documentation and distribution builds
+docs/
+dist/
+build/
+*.egg-info/

@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: procore-mcp-deployment
+  labels:
+    app: procore-mcp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: procore-mcp
+  template:
+    metadata:
+      labels:
+        app: procore-mcp
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
+      containers:
+        - name: procore-mcp
+          image: ghcr.io/liam-gray/procore-mcp:0.1.0
+          imagePullPolicy: IfNotPresent
+          command: ["procore-mcp"]
+          args:
+            - "--transport"
+            - "sse"
+            - "--host"
+            - "0.0.0.0"
+            - "--port"
+            - "8000"
+            - "--demo"
+            - "--audit-log-path"
+            - "/data/procore_audit.jsonl"
+          ports:
+            - name: sse
+              containerPort: 8000
+              protocol: TCP
+          resources:
+            limits:
+              cpu: 250m
+              memory: 256Mi
+            requests:
+              cpu: 50m
+              memory: 64Mi
+          volumeMounts:
+            - name: audit-volume
+              mountPath: /data
+      volumes:
+        - name: audit-volume
+          persistentVolumeClaim:
+            claimName: procore-mcp-audit-pvc

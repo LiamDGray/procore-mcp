@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  procore-mcp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: procore-mcp:latest
+    container_name: procore-mcp
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      # Transport options: sse (default for containerized remote access) or stdio
+      - PROCORE_TRANSPORT=sse
+      - PROCORE_HOST=0.0.0.0
+      - PROCORE_PORT=8000
+      # Demo mode enabled by default for zero-key evaluation
+      - PROCORE_DEMO_MODE=true
+      # Persistent audit log location
+      - PROCORE_AUDIT_LOG_PATH=/data/procore_audit.jsonl
+      # Production credentials (uncomment and populate for live API access)
+      # - PROCORE_CLIENT_ID=${PROCORE_CLIENT_ID}
+      # - PROCORE_CLIENT_SECRET=${PROCORE_CLIENT_SECRET}
+      # - PROCORE_BASE_URL=${PROCORE_BASE_URL:-https://api.procore.com}
+      # - PROCORE_ALLOW_WRITES=${PROCORE_ALLOW_WRITES:-false}
+    volumes:
+      - audit_data:/data
+
+volumes:
+  audit_data:
+    driver: local

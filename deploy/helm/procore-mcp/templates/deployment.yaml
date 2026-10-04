@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "procore-mcp.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "procore-mcp.name" . }}
+    helm.sh/chart: {{ include "procore-mcp.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "procore-mcp.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "procore-mcp.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      securityContext:
+        runAsNonRoot: {{ .Values.podSecurityContext.runAsNonRoot }}
+        runAsUser: {{ .Values.podSecurityContext.runAsUser }}
+        runAsGroup: {{ .Values.podSecurityContext.runAsGroup }}
+        fsGroup: {{ .Values.podSecurityContext.fsGroup }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            allowPrivilegeEscalation: {{ .Values.securityContext.allowPrivilegeEscalation }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["procore-mcp"]
+          args:
+            - "--transport"
+            - {{ .Values.env.transport | quote }}
+            - "--host"
+            - {{ .Values.env.host | quote }}
+            - "--port"
+            - {{ .Values.env.port | quote }}
+            {{- if .Values.env.demoMode }}
+            - "--demo"
+            {{- end }}
+            {{- if .Values.env.allowWrites }}
+            - "--allow-writes"
+            {{- end }}
+            - "--audit-log-path"
+            - {{ .Values.env.auditLogPath | quote }}
+          ports:
+            - name: sse
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            {{- if .Values.persistence.enabled }}
+            - name: audit-volume
+              mountPath: {{ .Values.persistence.mountPath }}
+            {{- end }}
+      volumes:
+        {{- if .Values.persistence.enabled }}
+        - name: audit-volume
+          persistentVolumeClaim:
+            claimName: {{ include "procore-mcp.fullname" . }}-audit-pvc
+        {{- end }}

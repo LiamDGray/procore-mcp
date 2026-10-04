@@ -1,0 +1,60 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "procore-mcp"
+version = "0.1.0"
+description = "Enterprise-grade Procore Model Context Protocol (MCP) server for Claude Desktop and Claude Code"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "BSL-1.1" }
+authors = [
+    { name = "Liam D Gray Labs" }
+]
+keywords = ["mcp", "procore", "model-context-protocol", "construction", "claude"]
+dependencies = [
+    "mcp>=2.3.0",
+    "pydantic>=2.0.0",
+    "requests>=2.31.0",
+    "rich>=13.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-cov>=4.0.0",
+    "ruff>=0.4.0",
+    "mypy>=1.10.0",
+    "types-requests>=2.31.0",
+    "types-PyYAML>=6.0.0",
+]
+
+[project.scripts]
+procore-mcp = "procore_mcp.server:main"
+
+[tool.setuptools.packages.find]
+include = ["procore_mcp*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B"]
+ignore = []
+
+[tool.mypy]
+python_version = "3.10"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+
+[[tool.mypy.overrides]]
+module = ["mcp.*", "mcp_types.*", "yaml.*", "yaml"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

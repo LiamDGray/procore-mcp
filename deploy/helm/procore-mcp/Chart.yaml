@@ -1,0 +1,18 @@
+apiVersion: v2
+name: procore-mcp
+description: Enterprise Model Context Protocol (MCP) Server for Procore Construction Management
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+keywords:
+  - mcp
+  - procore
+  - construction
+  - claude
+  - ai-agent
+home: https://github.com/liam-gray/procore-mcp
+sources:
+  - https://github.com/liam-gray/procore-mcp
+maintainers:
+  - name: Liam D Gray Labs
+    email: engineering@liamdgray.com
