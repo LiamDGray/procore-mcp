@@ -48,6 +48,7 @@ from procore_mcp.fsm import (
     verify_zero_terminal_reachability,
 )
 from procore_mcp.mock_server import ProcoreMockServer, create_mock_app
+from procore_mcp.prompts import register_prompts
 from procore_mcp.recorder import (
     DemoScenarioResult,
     DemoStep,
@@ -55,6 +56,7 @@ from procore_mcp.recorder import (
     generate_svg_animation,
     run_demo_scenario,
 )
+from procore_mcp.resources import register_resources
 from procore_mcp.safety import (
     FORBIDDEN_MUTATION_STATUSES,
     SAFE_MUTATION_STATUSES,
@@ -170,6 +172,8 @@ __all__ = [
     "normalize_status_string",
     "prove_all_entities_z3",
     "prove_zero_terminal_reachability_z3",
+    "register_prompts",
+    "register_resources",
     "resolve_1password",
     "resolve_aws_secrets",
     "resolve_env",

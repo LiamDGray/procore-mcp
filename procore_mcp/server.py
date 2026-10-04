@@ -14,6 +14,8 @@ from procore_mcp.audit import ActionStatus, AuditLogManager
 from procore_mcp.audit_cli import run_audit_inspect, run_audit_verify
 from procore_mcp.auth import ProcoreAuthConfig, ProcoreDMSAAuth
 from procore_mcp.client import ProcoreClient
+from procore_mcp.prompts import register_prompts
+from procore_mcp.resources import register_resources
 from procore_mcp.tools.core import (
     get_default_client,
     list_companies,
@@ -492,6 +494,14 @@ def create_server(
             per_page=per_page,
             detail_level=detail_level,
         )
+
+    # Register Native MCP Protocol Resources and Prompts
+    register_resources(
+        server=server,
+        client_getter=_get_client,
+        audit_manager_getter=lambda: audit_manager,
+    )
+    register_prompts(server=server)
 
     return server
 

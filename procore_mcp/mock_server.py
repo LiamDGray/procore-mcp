@@ -182,6 +182,19 @@ def _make_handler(sandbox: DemoSandbox) -> type[BaseHTTPRequestHandler]:
                 return
 
             # ----------------------------------------------------------------
+            # GET /rest/v1.0/projects/{id} (project detail)
+            # ----------------------------------------------------------------
+            m_proj = re.match(r"^/rest/v1\.0/projects/(\d+)$", path)
+            if m_proj:
+                project_id = int(m_proj.group(1))
+                proj = self._sandbox.get_project(project_id)
+                if proj is not None:
+                    self._send_json(200, proj)
+                else:
+                    self._send_json(404, {"error": f"Project {project_id} not found"})
+                return
+
+            # ----------------------------------------------------------------
             # GET /rest/v1.0/projects/{id}/rfis/{rfi_id}  (detail — check first)
             # ----------------------------------------------------------------
             m = re.match(r"^/rest/v1\.0/projects/(\d+)/rfis/(\d+)$", path)

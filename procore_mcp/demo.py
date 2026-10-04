@@ -1285,6 +1285,12 @@ class DemoSandbox:
         if clean_path == "/rest/v1.0/cost_codes":
             return _paginate(self.cost_codes)
 
+        m_proj_detail = re.match(r"^/rest/v1\.0/projects/(\d+)$", clean_path)
+        if m_proj_detail:
+            p_id = int(m_proj_detail.group(1))
+            proj = self.get_project(p_id)
+            return proj if proj is not None else {}
+
         # /rest/v1.0/projects/{project_id}/...
         m_rfi_detail = re.match(r"^/rest/v1\.0/projects/(\d+)/rfis/(\d+)$", clean_path)
         if m_rfi_detail:
