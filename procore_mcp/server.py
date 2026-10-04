@@ -603,6 +603,60 @@ def create_parser() -> MCPArgumentParser:
         help="Port to bind the mock server (default: 8080)",
     )
 
+    # Subcommand: config
+    config_parser = subparsers.add_parser(
+        "config",
+        help="Generate or install MCP configuration for AI agent clients",
+    )
+    config_parser.add_argument(
+        "--client",
+        choices=[
+            "claude-desktop",
+            "claude-code",
+            "cursor",
+            "windsurf",
+            "pi-agent",
+            "hermes-agent",
+            "codex-cli",
+            "all",
+        ],
+        default="claude-desktop",
+        help="Target AI agent client ecosystem (default: claude-desktop)",
+    )
+    config_parser.add_argument(
+        "--demo",
+        action="store_true",
+        default=False,
+        help="Include --demo flag in generated server arguments",
+    )
+    config_parser.add_argument(
+        "--transport",
+        choices=["stdio", "sse"],
+        default="stdio",
+        help="Transport protocol: 'stdio' or 'sse' (default: stdio)",
+    )
+    config_parser.add_argument(
+        "--url",
+        default="http://localhost:8000/sse",
+        help="Endpoint URL when using SSE transport (default: http://localhost:8000/sse)",
+    )
+    config_parser.add_argument(
+        "--install",
+        action="store_true",
+        default=False,
+        help="Automatically write or merge configuration into target config file on disk",
+    )
+    config_parser.add_argument(
+        "--output-dir",
+        default=None,
+        help="Custom base output directory for configuration files",
+    )
+    config_parser.add_argument(
+        "--config-path",
+        default=None,
+        help="Explicit destination configuration file path override",
+    )
+
     parser.add_argument(
         "--transport",
         choices=["stdio", "sse"],
@@ -701,6 +755,62 @@ def main(argv: list[str] | None = None) -> None:
         srv = ProcoreMockServer(port=args.port)
         sys.stderr.write(f"Procore mock server listening on http://{args.host}:{srv.port}\n")
         srv.serve_forever()
+        return
+
+    if args.subcommand == "config":
+        import json
+
+        from procore_mcp.config_generator import (
+            DEFAULT_SSE_URL,
+            generate_all_configs,
+            generate_config,
+            get_default_config_path,
+            install_all_configs,
+            install_config,
+            render_config_string,
+        )
+
+        base_dir = Path(args.output_dir) if args.output_dir else None
+        target_path = Path(args.config_path) if args.config_path else None
+        sse_url = getattr(args, "url", DEFAULT_SSE_URL)
+
+        if args.client == "all":
+            if args.install:
+                installed = install_all_configs(
+                    base_dir=base_dir,
+                    demo=args.demo,
+                    transport=args.transport,
+                    url=sse_url,
+                )
+                for client_name, path in installed.items():
+                    sys.stderr.write(f"Installed {client_name} configuration at {path}\n")
+            else:
+                all_cfg = generate_all_configs(
+                    demo=args.demo,
+                    transport=args.transport,
+                    url=sse_url,
+                )
+                sys.stdout.write(json.dumps(all_cfg, indent=2) + "\n")
+            return
+
+        if args.install:
+            dest = target_path or get_default_config_path(args.client, base_dir=base_dir)
+            installed_path = install_config(
+                client=args.client,
+                target_path=dest,
+                demo=args.demo,
+                transport=args.transport,
+                url=sse_url,
+            )
+            sys.stderr.write(f"Installed {args.client} configuration at {installed_path}\n")
+        else:
+            cfg = generate_config(
+                client=args.client,
+                demo=args.demo,
+                transport=args.transport,
+                url=sse_url,
+            )
+            sys.stdout.write(render_config_string(args.client, cfg))
         return
 
     env_demo = os.getenv("PROCORE_DEMO_MODE", "").strip().lower() in ("1", "true", "yes")
