@@ -87,6 +87,21 @@ Every mutating tool invocation (`create_rfi_draft`, `create_daily_log_draft`, fu
 3. **Recursive Payload Scanning**: Arbitrarily nested dictionaries, lists, and string values are scanned case-insensitively for forbidden status tokens.
 4. **Immediate Quarantining**: Any forbidden status raises `SafetyInvariantViolation`, halts tool execution, and logs a `BLOCKED` event into the cryptographic HMAC audit flight recorder.
 
+### 3.3 Formal Verification Engine (`procore_mcp.formal_z3` & `formal/`)
+
+To guarantee zero unauthorized commitments beyond empirical testing, `procore-mcp` is equipped with a tri-layer formal verification suite:
+
+1. **Microsoft Z3 SMT Solver (`procore_mcp.formal_z3`)**:
+   - Encodes Procore entity lifecycle transition relations ($T(s, s')$) into first-order predicate logic.
+   - SMT Conjecture: $\exists s_0, \dots, s_k \text{ reachable via MCP such that } s_k \in \text{ForbiddenStates}$.
+   - Prover status: **UNSAT** across all supported entities (`rfi`, `commitment`, `change_event`, `submittal`), mathematically proving that no execution path exists to a terminal state.
+   - Verified hermetically in CI: `pytest tests/test_formal_fsm_z3.py`.
+2. **Concurrent TLA+ Specification ([`formal/procore_safety.tla`](file:///home/liam/src/procore-mcp/formal/procore_safety.tla))**:
+   - Models the concurrent state transitions between LLM tool requests and the interceptor barrier.
+   - Model-checked with TLC to verify the temporal safety invariant: $\square (\text{ZeroUnauthorizedCommitment})$.
+3. **Machine-Checked Lean 4 Proof ([`formal/ProcoreSafety.lean`](file:///home/liam/src/procore-mcp/formal/ProcoreSafety.lean))**:
+   - Inductive types and verified theorems (`zero_unauthorized_commitment`, `trace_preserves_safety`) proving that safety is inductively preserved over arbitrary sequence lengths $k \in \mathbb{N}$.
+
 ---
 
 ## 4. 3-Tier Dynamic Token Distillation Engine

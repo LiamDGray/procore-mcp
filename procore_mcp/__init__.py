@@ -30,6 +30,12 @@ from procore_mcp.client import (
     validate_detail_level,
 )
 from procore_mcp.demo import DemoSandbox
+from procore_mcp.formal_z3 import (
+    ProofResult,
+    Z3FSMModel,
+    prove_all_entities_z3,
+    prove_zero_terminal_reachability_z3,
+)
 from procore_mcp.fsm import (
     ChangeEventLifecycle,
     CommitmentLifecycle,
@@ -111,6 +117,7 @@ __all__ = [
     "FORBIDDEN_MUTATION_STATUSES",
     "GENESIS_PREV_SIGNATURE",
     "InvalidStateTransitionError",
+    "ProofResult",
     "ProcoreAPIError",
     "ProcoreAuthConfig",
     "ProcoreClient",
@@ -124,6 +131,7 @@ __all__ = [
     "SubmittalLifecycle",
     "VALID_DETAIL_LEVELS",
     "VaultResolutionError",
+    "Z3FSMModel",
     "__version__",
     "assert_write_permitted",
     "compute_entry_signature",
@@ -160,6 +168,8 @@ __all__ = [
     "list_submittals",
     "main",
     "normalize_status_string",
+    "prove_all_entities_z3",
+    "prove_zero_terminal_reachability_z3",
     "resolve_1password",
     "resolve_aws_secrets",
     "resolve_env",

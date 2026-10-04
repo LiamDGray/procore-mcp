@@ -30,8 +30,7 @@ class TestCommercialDocumentation:
         content = COMMERCIAL_MD.read_text(encoding="utf-8")
         assert "Enterprise Commercial License" in content
         assert (
-            "Turnkey Async Deployment Sprints" in content
-            or "Turnkey Deployment Sprints" in content
+            "Turnkey Async Deployment Sprints" in content or "Turnkey Deployment Sprints" in content
         )
         assert "Enterprise Support Retainer" in content
         # Ensure no consumer sticker prices anchor enterprise procurement
